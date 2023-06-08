@@ -21,16 +21,18 @@ class Config:
         config = self.config[self.index]
         return {"ip": config[1], "port": config[2]}
     
-    def get_ismain(self):
+    def get_myturn(self):
         return self.config[self.index][3]
 
     def get_port(self):
         return int(self.config[self.index][2])
     
     def get_next(self):
+        index = 0
         if (self.index < self.numplayers - 1):
-            return self.config[self.index + 1]
-        return self.config[0]
+            index = self.index + 1
+        config = self.config[index]
+        return {"ip": config[1], "port": config[2]}
     
     def get_prev(self):
         if (self.index > 0):
