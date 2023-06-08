@@ -4,6 +4,7 @@ class Config:
         config_file = open("config.txt", "r")
         self.config = []
         self.index = -1
+        self.myturn = False
         for i, line in enumerate(config_file):
             if (i == 0):
                 self.numplayers = int(line.split(":")[1][:-1])
@@ -11,9 +12,9 @@ class Config:
             cfgline = line.split(" ")
             addr = cfgline[1].split(":")[1]
             port = cfgline[2].split(":")[1]
-            main = bool(int(cfgline[3].split(":")[1][:-1]))
-            self.config.append((i, addr, int(port), main))
+            self.config.append((i, addr, int(port)))
             if addr == self.ip:
+                self.myturn = bool(int(cfgline[3].split(":")[1][:-1]))
                 self.index = i-1
         config_file.close()
 
@@ -22,7 +23,10 @@ class Config:
         return {"ip": config[1], "port": config[2]}
     
     def get_myturn(self):
-        return self.config[self.index][3]
+        return self.myturn
+    
+    def set_myturn(self, toggle):
+        self.myturn = toggle
 
     def get_port(self):
         return int(self.config[self.index][2])
