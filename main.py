@@ -19,7 +19,7 @@ while True:
     if (machine_config.get_myturn() == False):
         data, addr = sock.recvfrom(1024)
         print("received message:")
-        print(data, addr)
+        print(data.decode(), addr)
     else:
         msg = input("input: ")
         print("sending " + msg + " to:")
