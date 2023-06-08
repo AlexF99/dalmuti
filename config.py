@@ -10,15 +10,19 @@ class Config:
                 continue
             cfgline = line.split(" ")
             addr = cfgline[1].split(":")[1]
-            port = cfgline[2].split(":")[1][:-1]
-            self.config.append((i, addr, port))
-            print(addr, self.ip, self.ip == addr)
+            port = cfgline[2].split(":")[1]
+            main = bool(int(cfgline[3].split(":")[1][:-1]))
+            self.config.append((i, addr, int(port), main))
             if addr == self.ip:
                 self.index = i-1
         config_file.close()
 
     def get_local(self):
-        return self.config[self.index]
+        config = self.config[self.index]
+        return {"ip": config[1], "port": config[2]}
+    
+    def get_ismain(self):
+        return self.config[self.index][3]
 
     def get_port(self):
         return int(self.config[self.index][2])

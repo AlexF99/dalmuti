@@ -1,4 +1,5 @@
 import socket
+import time
 from config import Config
 
 machine_config = Config(socket.gethostbyname(socket.gethostname()))
@@ -14,6 +15,9 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock.bind((machine_config.ip, machine_config.get_port()))
 
 while True:
-    data, addr = sock.recvfrom(1024)
-    print("received message from: %s: %s" % addr % data)
-    sock.sendto(MESSAGE, (UDP_IP, UDP_PORT))
+    if (machine_config.get_ismain() == False):
+        data, addr = sock.recvfrom(1024)
+        print("received message from: %s: %s" % addr % data)
+    else:
+        time.sleep(1)
+        sock.sendto(MESSAGE, (machine_config.get_next()[1], machine_config.get_next()[2]))
