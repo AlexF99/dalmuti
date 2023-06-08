@@ -1,6 +1,6 @@
-players: 5
-0- addr: port: 2175
-1- addr: port: 2176
-2- addr: port: 2177
-3- addr: port: 2178
-4- addr: port: 2179
+players:5
+0 addr:192.168.15.8 port:2175
+1 addr:127.0.0.1 port:2176
+2 addr:127.0.0.1 port:2177
+3 addr:127.0.0.1 port:2178
+4 addr:127.0.0.1 port:2179
