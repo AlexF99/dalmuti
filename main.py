@@ -3,13 +3,12 @@ import time
 from config import Config
 
 machine_config = Config(socket.gethostbyname(socket.gethostname()))
+print("num players: " + str(machine_config.numplayers))
+print("i am on:")
 print(machine_config.get_local())
+print("next:")
 print(machine_config.get_next())
 print("my port is:" + str(machine_config.get_port()))
-
-UDP_IP = machine_config.ip
-UDP_PORT = machine_config.get_port()
-MESSAGE = b"Hello, World!"
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock.bind((machine_config.ip, machine_config.get_port()))
