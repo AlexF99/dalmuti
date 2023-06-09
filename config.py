@@ -1,4 +1,4 @@
-class Config:
+class Player:
     def __init__(self, ip):
         self.mycards = []
         self.ip = ip

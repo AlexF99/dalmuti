@@ -1,5 +1,5 @@
 import socket
-from config import Config
+from config import Player
 import random
 
 deck = []
@@ -10,59 +10,59 @@ for i in range(1, 13):
 random.shuffle(deck)
 print(deck)
 
-machine_config = Config(socket.gethostbyname(socket.gethostname()))
-print("num players: " + str(machine_config.numplayers))
+player = Player(socket.gethostbyname(socket.gethostname()))
+print("num players: " + str(player.numplayers))
 print("i am on:")
-print(machine_config.get_local())
+print(player.get_local())
 print("next:")
-print(machine_config.get_next())
-print("my port is:" + str(machine_config.get_port()))
+print(player.get_next())
+print("my port is:" + str(player.get_port()))
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-sock.bind((machine_config.ip, machine_config.get_port()))
+sock.bind((player.ip, player.get_port()))
 
 # shuffling & dealing
-if machine_config.main:
+if player.main:
     input("press anything to start shuffling: ")
     deck = []
-    numplayers = machine_config.numplayers
+    numplayers = player.numplayers
     for i in range(1, 13):
         for j in range(i):
             deck.append(i)
 
     random.shuffle(deck)
     for i, card in enumerate(deck):
-        if i % numplayers == machine_config.index:
-            machine_config.receive_card(card)
+        if i % numplayers == player.index:
+            player.receive_card(card)
         else:
-            print("player %d gets card %d" % (i % machine_config.numplayers, card))
-            sock.sendto(str(card).encode(), (machine_config.get_index(i % numplayers)["ip"], machine_config.get_index(i % numplayers)["port"]))
+            print("player %d gets card %d" % (i % player.numplayers, card))
+            sock.sendto(str(card).encode(), (player.get_index(i % numplayers)["ip"], player.get_index(i % numplayers)["port"]))
 
-    for i in range(machine_config.numplayers):
-        if i != machine_config.index:
-            sock.sendto("endshuffle".encode(), (machine_config.get_index(i % numplayers)["ip"], machine_config.get_index(i % numplayers)["port"]))
+    for i in range(player.numplayers):
+        if i != player.index:
+            sock.sendto("endshuffle".encode(), (player.get_index(i % numplayers)["ip"], player.get_index(i % numplayers)["port"]))
 else:
     data, addr = sock.recvfrom(1024)
     while (data.decode() != "endshuffle"):
         print("received message:")
         received = data.decode()
         print(received)
-        machine_config.receive_card(received)
+        player.receive_card(received)
         data, addr = sock.recvfrom(1024)
 
 print("mycards: ")
-print(machine_config.mycards)
+print(player.mycards)
 
 # playing
 while True:
-    if (machine_config.myturn == False):
+    if (player.myturn == False):
         data, addr = sock.recvfrom(1024)
         print("received message:")
         print(data.decode(), addr)
-        machine_config.set_myturn(True)
+        player.set_myturn(True)
     else:
         msg = input("input: ")
         print("sending " + msg + " to:")
-        print (machine_config.get_next()["ip"], machine_config.get_next()["port"])
-        sock.sendto(msg.encode(), (machine_config.get_next()["ip"], machine_config.get_next()["port"]))
-        machine_config.set_myturn(False)
+        print (player.get_next()["ip"], player.get_next()["port"])
+        sock.sendto(msg.encode(), (player.get_next()["ip"], player.get_next()["port"]))
+        player.set_myturn(False)
