@@ -41,7 +41,8 @@ class Config:
     def get_index(self, index):
         if index > self.numplayers - 1 or index < 0:
             raise Exception("Index out of range")
-        return self.config[index]
+        config = self.config[index]
+        return {"ip": config[1], "port": config[2]}
     
     def receive_card(self, card):
         self.mycards.append(int(card))

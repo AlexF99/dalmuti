@@ -25,21 +25,22 @@ sock.bind((machine_config.ip, machine_config.get_port()))
 if machine_config.main:
     input("press anything to start shuffling: ")
     deck = []
+    numplayers = machine_config.numplayers
     for i in range(1, 13):
         for j in range(i):
             deck.append(i)
 
     random.shuffle(deck)
     for i, card in enumerate(deck):
-        if i == machine_config.index:
+        if i % numplayers == machine_config.index:
             machine_config.receive_card(card)
         else:
             print("player %d gets card %d" % (i % machine_config.numplayers, card))
-            sock.sendto(str(card).encode(), (machine_config.get_next()["ip"], machine_config.get_next()["port"]))
+            sock.sendto(str(card).encode(), (machine_config.get_index(i % numplayers)["ip"], machine_config.get_index(i % numplayers)["port"]))
 
     for i in range(machine_config.numplayers):
         if i != machine_config.index:
-            sock.sendto("endshuffle".encode(), (machine_config.get_next()["ip"], machine_config.get_next()["port"]))
+            sock.sendto("endshuffle".encode(), (machine_config.get_index(i % numplayers)["ip"], machine_config.get_index(i % numplayers)["port"]))
 else:
     data, addr = sock.recvfrom(1024)
     while (data.decode() != "endshuffle"):
@@ -48,6 +49,9 @@ else:
         print(received)
         machine_config.receive_card(received)
         data, addr = sock.recvfrom(1024)
+
+print("mycards: ")
+print(machine_config.mycards)
 
 # playing
 while True:
