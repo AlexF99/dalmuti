@@ -1,4 +1,6 @@
-players:3
-0 addr:200.17.202.6 port:2175 main:0
-1 addr:200.17.202.34 port:2176 main:0
-2 addr:200.17.202.35 port:2177 main:1
+players:5
+0 addr:10.254.223.29 port:2175 main:0
+1 addr:10.254.223.30 port:2175 main:0
+2 addr:10.254.223.31 port:2175 main:0
+3 addr:10.254.223.32 port:2175 main:0
+4 addr:10.254.223.35 port:2175 main:1
