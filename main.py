@@ -66,7 +66,7 @@ else:
         raw_data = network.socket.recv(4096)
         data = pickle.loads(raw_data)
 
-        print(data)
+        print(data.type)
 
         if (data): 
             if (data.dest == player.ip and data.type == "shuffle"):
