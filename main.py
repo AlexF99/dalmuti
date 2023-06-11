@@ -24,7 +24,7 @@ print("Aguardando outros jogadores...")
 player.say_hi(network.socket)
 
 # shuffling & dealing
-if player.main:
+if player.main == 1:
     input("press anything to start shuffling: ")
 
     deck = []
