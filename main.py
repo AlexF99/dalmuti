@@ -43,7 +43,7 @@ if player.main == 1:
             network.socket.sendto(pickle.dumps(message), (player.next.ip, player.next.port))
 
             while True:        
-                raw_data = socket.recv(4096)
+                raw_data = network.socket.recv(4096)
                 data = pickle.loads(raw_data)
 
                 print(data)
@@ -63,7 +63,7 @@ if player.main == 1:
             network.socket.sendto(pickle.dumps(message), (next_player.ip, next_player.port))
 else:
     while True:
-        raw_data = socket.recv(4096)
+        raw_data = network.socket.recv(4096)
         data = pickle.loads(raw_data)
 
         print(data)
