@@ -17,7 +17,7 @@ class Network:
             cfgline = cfgline.split(" ")
             addr = cfgline[1].split(":")[1]
             port = int(cfgline[2].split(":")[1])
-            dealer = cfgline[3].split(":")[1]
+            dealer = int(cfgline[3].split(":")[1])
 
             new_player = Player(addr, port, dealer)
             self.players.append(new_player)

@@ -24,7 +24,7 @@ print("Aguardando outros jogadores...")
 player.say_hi(network.socket)
 
 # shuffling & dealing
-if player.main == 1:
+if (player.main == 1):
     input("press anything to start shuffling: ")
 
     deck = []
@@ -39,7 +39,7 @@ if player.main == 1:
         if (next_player == player):
             player.receive_card(card)
         else:
-            message = Message(player.ip, next_player.ip, "suffle", card, "")
+            message = Message(player.ip, next_player.ip, "shuffle", card, "")
             network.socket.sendto(pickle.dumps(message), (player.next.ip, player.next.port))
 
             while True:        
@@ -57,7 +57,7 @@ if player.main == 1:
         #     print("player %d gets card %d" % (i % player.numplayers, card))
         #     sock.sendto(str(card).encode(), (player.get_index(i % numplayers)["ip"], player.get_index(i % numplayers)["port"]))
 
-    for next_player in network.players[-1]:
+    for next_player in reversed(network.players):
         if next_player != player:
             message = Message(player.ip, next_player.ip, "end_shuffle", "", "")
             network.socket.sendto(pickle.dumps(message), (next_player.ip, next_player.port))
@@ -71,7 +71,7 @@ else:
         if (data): 
             if (data.dest == player.ip and data.type == "shuffle"):
                 print(f"Card {data.play} received")
-                player.receive_card(data.play)
+                player.receive_card(data.play[0])
                 message = Message(player.ip, data.origin, "confirm_shuffle", "", "")
                 network.socket.sendto(pickle.dumps(message), (player.next.ip, player.next.port))
 
