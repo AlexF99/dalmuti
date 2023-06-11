@@ -18,7 +18,7 @@ print(player.get_local())
 print("next:")
 print(player.get_next())
 print("my port is: " + str(player.get_port()))
-
+print(f"i am a dealer? {player.main}")
 
 print("Aguardando outros jogadores...")
 player.say_hi(network.socket)
