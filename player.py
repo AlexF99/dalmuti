@@ -13,7 +13,6 @@ class Player:
     def say_hi(self, socket):
         message = Message(self.ip, self.ip, "hi", "", "nsei")
         while True:
-            # print(pickle.dumps(message))
             socket.sendto(pickle.dumps(message), (self.next.ip, self.next.port))
             raw_data = socket.recv(4096)
             data = pickle.loads(raw_data)
