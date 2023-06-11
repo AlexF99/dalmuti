@@ -9,16 +9,6 @@ network.init()
 address = socket.gethostbyname(socket.gethostname())
 player = network.get_chair(address)
 
-print(player)
-
-deck = []
-for i in range(1, 13):
-    for j in range(i):
-        deck.append(i)
-
-random.shuffle(deck)
-# print(deck)
-
 # player = Player(socket.gethostbyname(socket.gethostname()))
 print("num players: " + str(network.num_players))
 print("i am on:")
