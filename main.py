@@ -39,7 +39,7 @@ if (player.main == 1):
         if (next_player == player):
             player.receive_card(card)
         else:
-            message = Message(player.ip, next_player.ip, "shuffle", card, "")
+            message = Message(player.id, player.ip, next_player.ip, "shuffle", card, "")
             network.socket.sendto(pickle.dumps(message), (player.next.ip, player.next.port))
 
             while True:        
@@ -51,15 +51,9 @@ if (player.main == 1):
                 if (data.dest == player.ip and data.type == "confirm_shuffle"):
                     break
 
-        # if i % numplayers == player.index:
-        #     player.receive_card(card)
-        # else:
-        #     print("player %d gets card %d" % (i % player.numplayers, card))
-        #     sock.sendto(str(card).encode(), (player.get_index(i % numplayers)["ip"], player.get_index(i % numplayers)["port"]))
-
     for next_player in reversed(network.players):
         if next_player != player:
-            message = Message(player.ip, next_player.ip, "end_shuffle", "", "")
+            message = Message(player.id, player.ip, next_player.ip, "end_shuffle", "", "")
             network.socket.sendto(pickle.dumps(message), (next_player.ip, next_player.port))
 else:
     while True:
@@ -72,7 +66,7 @@ else:
             if (data.dest == player.ip and data.type == "shuffle"):
                 print(f"Card {data.play} received")
                 player.receive_card(data.play[0])
-                message = Message(player.ip, data.origin, "confirm_shuffle", "", "")
+                message = Message(player.id, player.ip, data.origin, "confirm_shuffle", "", "")
                 network.socket.sendto(pickle.dumps(message), (player.next.ip, player.next.port))
 
             elif (data.dest != player.ip):
@@ -87,18 +81,45 @@ else:
 print("mycards: ")
 print(player.mycards)
 
-exit(1)
-
 # playing
 while True:
-    if (player.myturn == False):
-        data, addr = sock.recvfrom(1024)
-        print("received message:")
-        print(data.decode(), addr)
-        player.set_myturn(True)
+    if (player.myturn):
+        choice = int(input("Sua vez, escolha sua carta: "))
+        card_index = player.mycards.index(choice) if choice in player.mycards else -1
+        
+        while (card_index == -1):
+            choice = int(input("Você não possui essa carta, tente outra. "))
+            card_index = player.mycards.index(choice) if choice in player.mycards else -1
+
+        card = player.mycards[card_index]
+        print(f"Você escolheu a carta {card}")
+        message = Message(player.id, player.ip, player.ip, "play", card, "")
+        network.socket.sendto(pickle.dumps(message), (player.next.ip, player.next.port))
+
+        player.mycards.remove(card)
+        print(player.mycards)
+
+        while True:
+            raw_data = network.socket.recv(4096)
+            data = pickle.loads(raw_data)
+
+            if (data):
+                if (data.dest == player.ip and data.type == "play"):
+                    print("Passou por todo mundo")
+                    message = Message(player.id, player.ip, player.next.ip, "pass", "", "")
+                    network.socket.sendto(pickle.dumps(message), (player.next.ip, player.next.port))
+                    player.drop_stick()
+                    break
+
     else:
-        msg = input("input: ")
-        print("sending " + msg + " to:")
-        print (player.get_next()["ip"], player.get_next()["port"])
-        sock.sendto(msg.encode(), (player.get_next()["ip"], player.get_next()["port"]))
-        player.set_myturn(False)
+        raw_data = network.socket.recv(4096)
+        data = pickle.loads(raw_data)
+
+        if (data):
+            if (data.dest != player.ip and data.type == "play"):
+                print(f"Jogador {data.owner} enviou carta {data.play[0]}")
+                network.socket.sendto(raw_data, (player.next.ip, player.next.port))
+            
+            elif (data.dest == player.ip and data.type == "pass"):
+                print("Bastão passado")
+                player.get_stick()

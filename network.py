@@ -19,7 +19,11 @@ class Network:
             port = int(cfgline[2].split(":")[1])
             dealer = int(cfgline[3].split(":")[1])
 
-            new_player = Player(addr, port, dealer)
+            new_player = Player(i, addr, port, dealer)
+
+            if (dealer):
+                new_player.get_stick()
+
             self.players.append(new_player)
 
         for i, player in enumerate(self.players):
