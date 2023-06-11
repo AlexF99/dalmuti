@@ -28,7 +28,6 @@ if player.main:
     input("press anything to start shuffling: ")
 
     deck = []
-    numplayers = player.numplayers
     for i in range(1, 13):
         for j in range(i):
             deck.append(i)
