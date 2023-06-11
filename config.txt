@@ -1,6 +1,9 @@
 players:3
-0 addr:10.254.223.29 port:2171 main:1
+0 addr:10.254.223.29 port:2171 main:0
 1 addr:10.254.223.30 port:2172 main:0
 2 addr:10.254.223.31 port:2173 main:0
 3 addr:10.254.223.32 port:2174 main:0
 4 addr:10.254.223.35 port:2175 main:0
+
+0 addr:127.0.1.1 port:2171 main:1
+0 addr:127.0.1.1 port:2172 main:1

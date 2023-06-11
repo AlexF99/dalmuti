@@ -1,6 +1,15 @@
 import socket
-from config import Player
+from player import Player
+from network import Network
 import random
+
+network = Network()
+network.init()
+
+address = socket.gethostbyname(socket.gethostname())
+player = network.get_chair(address)
+
+print(player)
 
 deck = []
 for i in range(1, 13):
@@ -8,18 +17,21 @@ for i in range(1, 13):
         deck.append(i)
 
 random.shuffle(deck)
-print(deck)
+# print(deck)
 
-player = Player(socket.gethostbyname(socket.gethostname()))
-print("num players: " + str(player.numplayers))
+# player = Player(socket.gethostbyname(socket.gethostname()))
+print("num players: " + str(network.num_players))
 print("i am on:")
 print(player.get_local())
 print("next:")
 print(player.get_next())
-print("my port is:" + str(player.get_port()))
+print("my port is: " + str(player.get_port()))
 
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-sock.bind((player.ip, player.get_port()))
+
+print("Aguardando outros jogadores...")
+player.say_hi(network.socket)
+
+exit(1)
 
 # shuffling & dealing
 if player.main:
