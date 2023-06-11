@@ -6,7 +6,6 @@ import random
 import pickle
 
 network = Network()
-network.init()
 
 address = socket.gethostbyname(socket.gethostname())
 player = network.get_chair(address)

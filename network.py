@@ -8,7 +8,6 @@ class Network:
         self.players = []
         self.socket = None
 
-    def init(self):
         config_file = open("config.txt", "r")
         self.num_players = int(config_file.readline().split(":")[1])
 
@@ -33,7 +32,6 @@ class Network:
                 player.next = self.players[0]
         
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
         config_file.close()
     
     def get_chair(self, ip):
