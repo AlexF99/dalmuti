@@ -105,6 +105,7 @@ while True:
                 if occurences == 0 or numcards < 1 or numcards > occurences:
                     continue
                 
+                valid_play = True
                 while numcards > 0:
                     player.mycards.remove(choice)
                     numcards = numcards - 1
