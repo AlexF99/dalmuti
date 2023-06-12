@@ -190,6 +190,6 @@ while True:
                 print(f"player {data.owner} won the game :(")
                 if str(network.get_next(player.id).id) == str(data.owner):
                     print("proximo esta mundando!!")
-                    player.next = network.get_next(player.id + 1)
+                    player.next = network.get_next(player.next.id)
                 network.socket.sendto(raw_data, (player.next.ip, player.next.port))
 
