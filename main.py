@@ -166,6 +166,9 @@ while True:
                 player.get_stick()
 
             elif (data.dest != player.ip and data.type == "roundwin"):
+                print(f"jogador {data.owner} ganhou rodada")
                 player.last_play = {"set": 0, "card": 0}
                 player.consecutive_passes = 0
                 player.round_starter = False
+                network.socket.sendto(raw_data, (player.next.ip, player.next.port))
+
