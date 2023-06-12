@@ -81,6 +81,7 @@ print(player.mycards)
 
 # playing
 while True:
+    print(network.get_next(player.id).id)
     if (player.myturn):
         valid_play = False
         choice = 0
