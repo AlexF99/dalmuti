@@ -123,6 +123,8 @@ while True:
                     player.mycards.remove(choice)
                     i = i + 1
 
+                player.mycards = 0 #remove isso depois pelo amor de deus
+
                 if len(player.mycards) == 0:
                     print(player.mycards)
                     print("\n\nParabéns! Você ganhou essa mao!")
@@ -190,5 +192,4 @@ while True:
                     print("proximo esta mundando!!")
                     player.next = network.get_next(player.id + 1)
                 network.socket.sendto(raw_data, (player.next.ip, player.next.port))
-                quit()
 
