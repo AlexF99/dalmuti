@@ -122,10 +122,16 @@ while True:
                     player.mycards.remove(choice)
                     i = i + 1
 
-                print(player.mycards)
-                print(f"Você jogou {numcards} da carta {choice}")
-                message = Message(player.id, player.ip, player.ip, "play", f"{numcards}:{choice}", "")
-                network.socket.sendto(pickle.dumps(message), (player.next.ip, player.next.port))
+                if len(player.mycards) == 0:
+                    print(player.mycards)
+                    print("\n\nParabéns! Você ganhou essa mao!")
+                    message = Message(player.id, player.ip, player.ip, "gamewin", "", "")
+                    network.socket.sendto(pickle.dumps(message), (player.next.ip, player.next.port))
+                else:
+                    print(player.mycards)
+                    print(f"Você jogou {numcards} da carta {choice}")
+                    message = Message(player.id, player.ip, player.ip, "play", f"{numcards}:{choice}", "")
+                    network.socket.sendto(pickle.dumps(message), (player.next.ip, player.next.port))
 
         player.round_starter = False
         while True:
@@ -137,6 +143,9 @@ while True:
                 network.socket.sendto(pickle.dumps(message), (player.next.ip, player.next.port))
                 player.drop_stick()
                 break
+            elif (data and data.dest == player.ip and data.type == "gamewin"):
+                print("Todos sabem que eu ganhei")
+                quit()
 
     else:
         print("up and listening...")
@@ -170,4 +179,12 @@ while True:
                 player.consecutive_passes = 0
                 player.round_starter = False
                 network.socket.sendto(raw_data, (player.next.ip, player.next.port))
+
+            elif (data.dest != player.ip and data.type == "gamewin"):
+                player.last_play = {"set": 0, "card": 0}
+                player.consecutive_passes = 0
+                player.round_starter = False
+                print(f"player {data.owner} won the game :(")
+                network.socket.sendto(raw_data, (player.next.ip, player.next.port))
+                quit()
 
