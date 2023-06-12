@@ -118,6 +118,7 @@ while True:
                 message = Message(player.id, player.ip, player.ip, "play", f"{numcards}:{choice}", "")
                 network.socket.sendto(pickle.dumps(message), (player.next.ip, player.next.port))
 
+        player.round_starter = False
         while True:
             raw_data = network.socket.recv(4096)
             data = pickle.loads(raw_data)
@@ -139,16 +140,17 @@ while True:
                 if data.play[0] == "pass":
                     player.consecutive_passes = player.consecutive_passes + 1
                     print(f"Jogador {data.owner} passou a vez")
-                    # if player.consecutive_passes >= network.num_players:
-                    #     player.round_starter = True
-                    #     message = Message(player.id, player.ip, player.ip, "roundwin", "", "")
-                    #     network.socket.sendto(pickle.dumps(message), (player.next.ip, player.next.port))
-                    #     while True:
-                    #         raw_data = network.socket.recv(4096)
-                    #         data = pickle.loads(raw_data)
+                    print(player.consecutive_passes)
+                    if player.consecutive_passes >= network.num_players:
+                        player.round_starter = True
+                        message = Message(player.id, player.ip, player.ip, "roundwin", "", "")
+                        network.socket.sendto(pickle.dumps(message), (player.next.ip, player.next.port))
+                        while True:
+                            raw_data = network.socket.recv(4096)
+                            data = pickle.loads(raw_data)
 
-                    #         if (data and data.dest == player.ip and data.type == "roundwin"):
-                    #             print("Todos sabem que eu ganhei a rodada")
+                            if (data and data.dest == player.ip and data.type == "roundwin"):
+                                print("Todos sabem que eu ganhei a rodada")
                 else:
                     player.consecutive_passes = 0
                     print(f"Jogador {data.owner} enviou carta {data.play[0]}")
