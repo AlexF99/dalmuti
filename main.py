@@ -94,7 +94,7 @@ while True:
                     numcards = int(input())
             else:
                 print(player.last_play["set"])
-                numcards = player.last_play["set"]
+                numcards = int(player.last_play["set"])
                 choice = int(input("Escolha sua carta (escolha 20 para passar): "))
             
             if (choice == 20):
