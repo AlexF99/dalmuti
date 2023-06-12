@@ -33,6 +33,11 @@ class Network:
         
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         config_file.close()
+
+    def get_next(self, id) -> Player:
+        if id == self.num_players - 1:
+            return self.players[-1]
+        return self.players[id+1]
     
     def get_chair(self, ip) -> Player:
         for player in self.players:

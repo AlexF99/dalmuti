@@ -185,9 +185,9 @@ while True:
                 player.consecutive_passes = 0
                 player.round_starter = False
                 print(f"player {data.owner} won the game :(")
-                if str(player.next.player_id) == str(data.owner):
+                if str(network.get_next(player.id).id) == str(data.owner):
                     print("proximo esta mundando!!")
-                    player.next = player.next.next
+                    player.next = network.get_next(player.id + 1)
                 network.socket.sendto(raw_data, (player.next.ip, player.next.port))
                 quit()
 
