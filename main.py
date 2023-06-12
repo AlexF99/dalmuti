@@ -93,6 +93,7 @@ while True:
                     print("quantos %d's voce quer jogar?" % choice)
                     numcards = int(input())
             else:
+                print(player.last_play)
                 numcards = player.last_play.set
                 choice = int(input("Escolha sua carta (escolha 20 para passar): "))
             
@@ -106,9 +107,10 @@ while True:
                     continue
                 
                 valid_play = True
-                while numcards > 0:
+                i=0
+                while i < numcards:
                     player.mycards.remove(choice)
-                    numcards = numcards - 1
+                    i = i + 1
 
                 print(player.mycards)
                 print(f"Você jogou {numcards} da carta {choice}")
@@ -149,7 +151,10 @@ while True:
                 else:
                     player.consecutive_passes = 0
                     print(f"Jogador {data.owner} enviou carta {data.play[0]}")
-                    player.last_play = {"set": data.play[0].split(":")[0], "card": data.play[0].split(":")[0]}
+                    play = data.play[0].split(":")
+                    player.last_play = {"set": play[0], "card": play[1]}
+                    print("last play dict")
+                    print(player.last_play)
                     network.socket.sendto(raw_data, (player.next.ip, player.next.port))
             
             elif (data.dest == player.ip and data.type == "stick"):
