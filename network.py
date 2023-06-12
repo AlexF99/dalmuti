@@ -36,7 +36,7 @@ class Network:
 
     def get_next(self, id) -> Player:
         if id == self.num_players - 1:
-            return self.players[-1]
+            return self.players[0]
         return self.players[id+1]
     
     def get_chair(self, ip) -> Player:
