@@ -101,6 +101,7 @@ while True:
                 print(f"Você passou a vez")
                 message = Message(player.id, player.ip, player.ip, "play", "pass", "")
                 network.socket.sendto(pickle.dumps(message), (player.next.ip, player.next.port))
+                valid_play = True
             else:
                 occurences = player.mycards.count(choice)
                 if occurences == 0 or numcards < 1 or numcards > occurences:
