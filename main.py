@@ -123,7 +123,7 @@ while True:
                     player.mycards.remove(choice)
                     i = i + 1
 
-                player.mycards = 0 #remove isso depois pelo amor de deus
+                player.mycards = [] #remove isso depois pelo amor de deus
 
                 if len(player.mycards) == 0:
                     print(player.mycards)
