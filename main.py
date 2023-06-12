@@ -141,8 +141,10 @@ while True:
                     player.consecutive_passes = player.consecutive_passes + 1
                     print(f"Jogador {data.owner} passou a vez")
                     print(player.consecutive_passes)
-                    if player.consecutive_passes >= network.num_players:
+                    if player.consecutive_passes >= network.num_players-1:
+                        print("ganhei")
                         player.round_starter = True
+                        player.consecutive_passes = 0
                         message = Message(player.id, player.ip, player.ip, "roundwin", "", "")
                         network.socket.sendto(pickle.dumps(message), (player.next.ip, player.next.port))
                         while True:
@@ -151,6 +153,7 @@ while True:
 
                             if (data and data.dest == player.ip and data.type == "roundwin"):
                                 print("Todos sabem que eu ganhei a rodada")
+                                player.get_stick()
                 else:
                     player.consecutive_passes = 0
                     print(f"Jogador {data.owner} enviou carta {data.play[0]}")
@@ -163,4 +166,6 @@ while True:
                 player.get_stick()
 
             elif (data.dest != player.ip and data.type == "roundwin"):
+                player.last_play = {"set": 0, "card": 0}
+                player.consecutive_passes = 0
                 player.round_starter = False
