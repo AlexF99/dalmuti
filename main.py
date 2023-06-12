@@ -52,6 +52,8 @@ if (player.main == 1):
         if next_player != player:
             message = Message(player.id, player.ip, next_player.ip, "end_shuffle", "", "")
             network.socket.sendto(pickle.dumps(message), (player.next.ip, player.next.port))
+
+    player.mycards.sort()
 else:
     while True:
         raw_data = network.socket.recv(4096)
@@ -72,7 +74,7 @@ else:
                 break
 
         data = None
-
+    player.mycards.sort()
 
 print("mycards: ")
 print(player.mycards)
@@ -85,6 +87,7 @@ while True:
         numcards = 0
         while not valid_play:
             if player.round_starter:
+                print(player.mycards)
                 choice = int(input("Escolha sua carta (escolha 20 para passar): "))
                 if choice != 20:
                     print("quantos %d's voce quer jogar?" % choice)
@@ -146,7 +149,7 @@ while True:
         data = pickle.loads(raw_data)
 
         if (data):
-            print(data)
+            print(data.type)
             if (data.dest != player.ip and data.type == "play"):
                 if data.play[0] == "pass":
                     player.consecutive_passes = player.consecutive_passes + 1
