@@ -122,10 +122,22 @@ while True:
 
             if (data):
                 if (data.dest == player.ip and data.type == "play"):
-                    print("Passou por todo mundo")
-                    message = Message(player.id, player.ip, player.next.ip, "stick", "", "")
-                    network.socket.sendto(pickle.dumps(message), (player.next.ip, player.next.port))
-                    player.drop_stick()
+                    if player.round_starter:
+                        message = Message(player.id, player.ip, player.ip, "roundwin", "", "")
+                        network.socket.sendto(pickle.dumps(message), (player.next.ip, player.next.port))
+                        while True:
+                            raw_data = network.socket.recv(4096)
+                            data = pickle.loads(raw_data)
+
+                            if (data and data.dest == player.ip and data.type == "roundwin"):
+                                print("Todos sabem que eu ganhei a rodada")
+                                player.get_stick()
+                                break
+                    else:
+                        print("Passou por todo mundo")
+                        message = Message(player.id, player.ip, player.next.ip, "stick", "", "")
+                        network.socket.sendto(pickle.dumps(message), (player.next.ip, player.next.port))
+                        player.drop_stick()
                     break
 
     else:
@@ -144,15 +156,6 @@ while True:
                         print("ganhei")
                         player.round_starter = True
                         player.consecutive_passes = 0
-                        message = Message(player.id, player.ip, player.ip, "roundwin", "", "")
-                        network.socket.sendto(pickle.dumps(message), (player.next.ip, player.next.port))
-                        while True:
-                            raw_data = network.socket.recv(4096)
-                            data = pickle.loads(raw_data)
-
-                            if (data and data.dest == player.ip and data.type == "roundwin"):
-                                print("Todos sabem que eu ganhei a rodada")
-                                player.get_stick()
                 else:
                     player.consecutive_passes = 0
                     print(f"Jogador {data.owner} enviou carta {data.play[0]}")
