@@ -83,28 +83,35 @@ print(player.mycards)
 # playing
 while True:
     if (player.myturn):
-        choice = int(input("Sua vez, escolha sua carta (escolha 20 para passar): "))
-        if (choice == 20):
-            message = Message(player.id, player.ip, player.ip, "play", "pass", "")
-            network.socket.sendto(pickle.dumps(message), (player.next.ip, player.next.port))
-        else:
-            occurences = player.mycards.count(choice)
-            print(occurences)
-            while occurences == 0:
-                choice = int(input("Carta indisponivel, escolha outra"))
-                occurences = player.mycards.count(choice)
+        valid_play = False
+        choice = 0
+        numcards = 0
+        while not valid_play:
+            if player.round_starter:
+                choice = int(input("Escolha sua carta (escolha 20 para passar): "))
+                if choice != 20:
+                    print("quantos %d's voce quer jogar? (maximo: %d)" % (choice, occurences))
+                    numcards = int(input())
             else:
-                print("quantos %d's voce quer jogar? (maximo: %d)" % (choice, occurences))
-                numcards = int(input())
-                while numcards < 1 or numcards > occurences:
-                    numcards = int(input("numero de cartas invalido, tente novamente: "))
+                numcards = player.last_play.set
+                choice = int(input("Escolha sua carta (escolha 20 para passar): "))
+            
+            if (choice == 20):
+                print(f"Você passou a vez")
+                message = Message(player.id, player.ip, player.ip, "play", "pass", "")
+                network.socket.sendto(pickle.dumps(message), (player.next.ip, player.next.port))
+            else:
+                occurences = player.mycards.count(choice)
+                if occurences == 0 or numcards < 1 or numcards > occurences:
+                    continue
+                
                 while numcards > 0:
                     player.mycards.remove(choice)
                     numcards = numcards - 1
 
                 print(player.mycards)
-                print(f"Você escolheu {occurences} da carta {card}")
-                message = Message(player.id, player.ip, player.ip, "play", f"{occurences}:{card}", "")
+                print(f"Você jogou {numcards} da carta {choice}")
+                message = Message(player.id, player.ip, player.ip, "play", f"{numcards}:{choice}", "")
                 network.socket.sendto(pickle.dumps(message), (player.next.ip, player.next.port))
 
         while True:
@@ -125,10 +132,29 @@ while True:
 
         if (data):
             if (data.dest != player.ip and data.type == "play"):
-                print(data.play)
-                print(f"Jogador {data.owner} enviou carta {data.play[0]}")
-                network.socket.sendto(raw_data, (player.next.ip, player.next.port))
+                if data.play[0] == "pass":
+                    player.consecutive_passes = player.consecutive_passes + 1
+                    print(f"Jogador {data.owner} passou a vez")
+                    if player.consecutive_passes >= network.num_players:
+                        player.round_starter = True
+                        message = Message(player.id, player.ip, player.ip, "roundwin", "", "")
+                        network.socket.sendto(pickle.dumps(message), (player.next.ip, player.next.port))
+                        while True:
+                            raw_data = network.socket.recv(4096)
+                            data = pickle.loads(raw_data)
+
+                            if (data and data.dest == player.ip and data.type == "roundwin"):
+                                print("Todos sabem que eu ganhei a rodada")
+                else:
+                    player.consecutive_passes = 0
+                    print(f"Jogador {data.owner} enviou carta {data.play[0]}")
+                    player.last_play.set = data.play[0].split(":")[0]
+                    player.last_play.card = data.play[0].split(":")[1]
+                    network.socket.sendto(raw_data, (player.next.ip, player.next.port))
             
             elif (data.dest == player.ip and data.type == "stick"):
                 print("Bastão passado")
                 player.get_stick()
+
+            elif (data.dest != player.ip and data.type == "roundwin"):
+                player.round_starter = False

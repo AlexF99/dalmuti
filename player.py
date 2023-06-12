@@ -8,9 +8,11 @@ class Player:
         self.ip = ip
         self.port = port
         self.next = None
-        self.myturn = False
         self.main = dealer
         self.myturn = False
+        self.round_starter = dealer
+        self.last_play = {"set": 0, "card": 0}
+        self.consecutive_passes = 0
     
     def say_hi(self, socket):
         message = Message(self.id, self.ip, self.ip, "hi", "", "nsei")
