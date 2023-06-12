@@ -90,7 +90,7 @@ while True:
             if player.round_starter:
                 choice = int(input("Escolha sua carta (escolha 20 para passar): "))
                 if choice != 20:
-                    print("quantos %d's voce quer jogar? (maximo: %d)" % (choice, occurences))
+                    print("quantos %d's voce quer jogar?" % choice)
                     numcards = int(input())
             else:
                 numcards = player.last_play.set
