@@ -34,7 +34,7 @@ class Network:
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         config_file.close()
     
-    def get_chair(self, ip):
+    def get_chair(self, ip) -> Player:
         for player in self.players:
             if (player.ip == ip):
                 self.socket.bind((player.ip, player.port))

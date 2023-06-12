@@ -53,7 +53,7 @@ if (player.main == 1):
     for next_player in reversed(network.players):
         if next_player != player:
             message = Message(player.id, player.ip, next_player.ip, "end_shuffle", "", "")
-            network.socket.sendto(pickle.dumps(message), (next_player.ip, next_player.port))
+            network.socket.sendto(pickle.dumps(message), (player.next.ip, player.next.port))
 else:
     while True:
         raw_data = network.socket.recv(4096)
@@ -83,20 +83,29 @@ print(player.mycards)
 # playing
 while True:
     if (player.myturn):
-        choice = int(input("Sua vez, escolha sua carta: "))
-        card_index = player.mycards.index(choice) if choice in player.mycards else -1
-        
-        while (card_index == -1):
-            choice = int(input("Você não possui essa carta, tente outra. "))
-            card_index = player.mycards.index(choice) if choice in player.mycards else -1
+        choice = int(input("Sua vez, escolha sua carta (escolha 20 para passar): "))
+        if (choice == 20):
+            message = Message(player.id, player.ip, player.ip, "play", "pass", "")
+            network.socket.sendto(pickle.dumps(message), (player.next.ip, player.next.port))
+        else:
+            occurences = player.mycards.count(choice)
+            print(occurences)
+            while occurences == 0:
+                choice = int(input("Carta indisponivel, escolha outra"))
+                occurences = player.mycards.count(choice)
+            else:
+                print("quantos %d's voce quer jogar? (maximo: %d)" % (choice, occurences))
+                numcards = int(input())
+                while numcards < 1 or numcards > occurences:
+                    numcards = int(input("numero de cartas invalido, tente novamente: "))
+                while numcards > 0:
+                    player.mycards.remove(choice)
+                    numcards = numcards - 1
 
-        card = player.mycards[card_index]
-        print(f"Você escolheu a carta {card}")
-        message = Message(player.id, player.ip, player.ip, "play", card, "")
-        network.socket.sendto(pickle.dumps(message), (player.next.ip, player.next.port))
-
-        player.mycards.remove(card)
-        print(player.mycards)
+                print(player.mycards)
+                print(f"Você escolheu {occurences} da carta {card}")
+                message = Message(player.id, player.ip, player.ip, "play", f"{occurences}:{card}", "")
+                network.socket.sendto(pickle.dumps(message), (player.next.ip, player.next.port))
 
         while True:
             raw_data = network.socket.recv(4096)
@@ -105,7 +114,7 @@ while True:
             if (data):
                 if (data.dest == player.ip and data.type == "play"):
                     print("Passou por todo mundo")
-                    message = Message(player.id, player.ip, player.next.ip, "pass", "", "")
+                    message = Message(player.id, player.ip, player.next.ip, "stick", "", "")
                     network.socket.sendto(pickle.dumps(message), (player.next.ip, player.next.port))
                     player.drop_stick()
                     break
@@ -116,9 +125,10 @@ while True:
 
         if (data):
             if (data.dest != player.ip and data.type == "play"):
+                print(data.play)
                 print(f"Jogador {data.owner} enviou carta {data.play[0]}")
                 network.socket.sendto(raw_data, (player.next.ip, player.next.port))
             
-            elif (data.dest == player.ip and data.type == "pass"):
+            elif (data.dest == player.ip and data.type == "stick"):
                 print("Bastão passado")
                 player.get_stick()
