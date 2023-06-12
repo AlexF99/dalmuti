@@ -148,8 +148,7 @@ while True:
                 else:
                     player.consecutive_passes = 0
                     print(f"Jogador {data.owner} enviou carta {data.play[0]}")
-                    player.last_play.set = data.play[0].split(":")[0]
-                    player.last_play.card = data.play[0].split(":")[1]
+                    player.last_play = {"set": data.play[0].split(":")[0], "card": data.play[0].split(":")[0]}
                     network.socket.sendto(raw_data, (player.next.ip, player.next.port))
             
             elif (data.dest == player.ip and data.type == "stick"):
