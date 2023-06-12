@@ -45,8 +45,6 @@ if (player.main == 1):
                 raw_data = network.socket.recv(4096)
                 data = pickle.loads(raw_data)
 
-                print(data)
-
                 if (data.dest == player.ip and data.type == "confirm_shuffle"):
                     break
 
@@ -63,7 +61,6 @@ else:
 
         if (data): 
             if (data.dest == player.ip and data.type == "shuffle"):
-                print(f"Card {data.play} received")
                 player.receive_card(data.play[0])
                 message = Message(player.id, player.ip, data.origin, "confirm_shuffle", "", "")
                 network.socket.sendto(pickle.dumps(message), (player.next.ip, player.next.port))
@@ -132,10 +129,12 @@ while True:
                     break
 
     else:
+        print("up and listening...")
         raw_data = network.socket.recv(4096)
         data = pickle.loads(raw_data)
 
         if (data):
+            print(data)
             if (data.dest != player.ip and data.type == "play"):
                 if data.play[0] == "pass":
                     player.consecutive_passes = player.consecutive_passes + 1
