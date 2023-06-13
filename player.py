@@ -1,10 +1,8 @@
-from message import Message
-import pickle
-
 class Player:
     def __init__(self, player_id, ip, port, dealer):
         self.mycards = []
         self.id = player_id
+        self.rank = 0
         self.ip = ip
         self.port = port
         self.main = dealer
@@ -12,21 +10,6 @@ class Player:
         self.round_starter = dealer
         self.last_play = {"set": 0, "card": 0}
         self.consecutive_passes = 0
-    
-    # def say_hi(self, socket):
-    #     message = Message(self.id, self.ip, self.ip, "hi", "", "nsei")
-    #     while True:
-    #         socket.sendto(pickle.dumps(message), (self.next.ip, self.next.port))
-    #         raw_data = socket.recv(4096)
-    #         data = pickle.loads(raw_data)
-
-    #         if ((data.origin == self.ip and data.dest == self.ip) or (data.type == "endhi")):
-    #             message = Message(self.id, self.ip, self.next.ip, "endhi", "", "")
-    #             socket.sendto(pickle.dumps(message), (self.next.ip, self.next.port))
-    #             break
-
-    #         socket.sendto(raw_data, (self.next.ip, self.next.port))
-            
 
     def get_local(self):
         return {"ip": self.ip, "port": self.port}
