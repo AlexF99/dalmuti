@@ -47,6 +47,7 @@ class Network:
         return (self.players[index+1].ip, self.players[index+1].port)
     
     def remove_player(self, id):
+        self.num_players = self.num_players - 1
         for player in self.players:
             if player.id == id:
                 self.players.remove(player)
