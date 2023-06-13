@@ -139,7 +139,7 @@ while True:
                 if len(player.mycards) == 0:
                     print(player.mycards)
                     print("\n\nParabéns! Você ganhou essa mao!")
-                    message = Message(player.id, player.ip, network.get_next_player(player), "gamewin", "", "")
+                    message = Message(player.id, player.ip, player.ip, "gamewin", "", "")
                     network.socket.sendto(pickle.dumps(message), network.get_next(player))
                 else:
                     print(player.mycards)
@@ -151,15 +151,12 @@ while True:
         while True:
             raw_data = network.socket.recv(4096)
             data = pickle.loads(raw_data)
-            if (data and data.dest == player.ip and data.type == "play"):
+            if (data and data.dest == player.ip and (data.type == "play" or data.type == "gamewin")):
                 print("Passou por todo mundo")
                 message = Message(player.id, player.ip, player.next.ip, "stick", "", "")
                 network.socket.sendto(pickle.dumps(message), network.get_next(player))
                 player.drop_stick()
                 break
-            elif (data and data.dest == player.ip and data.type == "gamewin"):
-                print("Todos sabem que eu ganhei")
-                quit()
 
     else:
         print("up and listening...")
@@ -204,5 +201,6 @@ while True:
                 print(data.dest)
                 print(player.ip)
                 if data.dest == player.ip:
+                    player.round_starter = True
                     player.get_stick()
 
