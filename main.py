@@ -198,10 +198,9 @@ while True:
                 player.last_play = {"set": 0, "card": 0}
                 player.consecutive_passes = 0
                 player.round_starter = False
-                print(f"player {data.owner} won the game :(")
+                print(f"player {data.owner} ganhou o jogo :(")
+                network.socket.sendto(raw_data, network.get_next(player))
                 network.remove_player(int(data.owner))
                 if data.dest == player.ip:
                     player.get_stick()
-                else:
-                    network.socket.sendto(raw_data, network.get_next(player))
 
