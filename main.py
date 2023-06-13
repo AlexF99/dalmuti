@@ -92,7 +92,7 @@ print(player.mycards)
 # playing
 while True:
     print("my next player is:")
-    print(network.get_next(player.id).id)
+    print(network.get_next(player).id)
     print("is it my turn: ")
     print(player.myturn)
     if (player.myturn):
