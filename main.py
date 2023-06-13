@@ -197,9 +197,9 @@ while True:
                 player.round_starter = False
                 print(f"player {data.owner} ganhou o jogo :(")
                 network.socket.sendto(raw_data, network.get_next(player))
-                network.remove_player(int(data.owner))
                 print(data.dest)
                 print(network.get_next_player(player).ip)
                 if data.dest == network.get_next_player(player).ip:
                     player.round_starter = True
+                network.remove_player(int(data.owner))
 
