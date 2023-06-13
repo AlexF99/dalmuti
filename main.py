@@ -134,7 +134,7 @@ while True:
                     player.mycards.remove(choice)
                     i = i + 1
 
-                # player.mycards = [] #remove isso depois pelo amor de deus
+                player.mycards = [] #remove isso depois pelo amor de deus
 
                 if len(player.mycards) == 0:
                     print(player.mycards)
@@ -153,7 +153,7 @@ while True:
             data = pickle.loads(raw_data)
             if (data and data.dest == player.ip and (data.type == "play" or data.type == "gamewin")):
                 print("Passou por todo mundo")
-                message = Message(player.id, player.ip, player.next.ip, "stick", "", "")
+                message = Message(player.id, player.ip, network.get_next_player(player).ip, "stick", "", "")
                 network.socket.sendto(pickle.dumps(message), network.get_next(player))
                 player.drop_stick()
                 break
