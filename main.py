@@ -134,12 +134,12 @@ while True:
                     player.mycards.remove(choice)
                     i = i + 1
 
-                # player.mycards = [] #remove isso depois pelo amor de deus
+                player.mycards = [] #remove isso depois pelo amor de deus
 
                 if len(player.mycards) == 0:
                     print(player.mycards)
                     print("\n\nParabéns! Você ganhou essa mao!")
-                    message = Message(player.id, player.ip, player.next.ip, "gamewin", "", "")
+                    message = Message(player.id, player.ip, network.get_next_player(player), "gamewin", "", "")
                     network.socket.sendto(pickle.dumps(message), network.get_next(player))
                 else:
                     print(player.mycards)
