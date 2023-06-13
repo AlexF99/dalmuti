@@ -35,7 +35,7 @@ class Network:
         config_file.close()
 
     def get_next(self, id) -> Player:
-        if id >= self.num_players - 1:
+        if id >= self.num_players:
             return self.players[0]
         return self.players[id+1]
     
