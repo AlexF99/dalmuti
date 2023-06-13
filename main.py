@@ -82,7 +82,7 @@ print(player.mycards)
 # playing
 while True:
     print("my next player is:")
-    print(network.get_next(player.id).id)
+    print(network.get_next(player.id))
     if (player.myturn):
         valid_play = False
         choice = 0
@@ -193,6 +193,7 @@ while True:
                     print("proximo esta mundando!!")
                     player.next = network.get_next(player.next.id)
                     player.round_starter = True
+                    player.get_stick()
                 else:
                     network.socket.sendto(raw_data, (player.next.ip, player.next.port))
 
