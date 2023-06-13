@@ -122,7 +122,7 @@ while True:
 
                 if len(player.mycards) == 0:
                     print(player.mycards)
-                    print(f"\n\Acabou as cartas! Você ficou em {player.rank}o lugar\n")
+                    print(f"\n\nAcabou as cartas! Você ficou em {player.rank + 1}o lugar\n")
                     message = Message(player.id, player.ip, player.ip, "gamewin", "", "")
                     network.socket.sendto(pickle.dumps(message), network.get_next(player))
                 else:
