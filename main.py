@@ -192,16 +192,10 @@ while True:
                 network.socket.sendto(raw_data, network.get_next(player))
 
             elif (data.type == "gamewin"):
-                player.last_play = {"set": 0, "card": 0}
                 player.consecutive_passes = 0
                 player.round_starter = False
                 print(f"player {data.owner} ganhou o jogo :(")
                 network.socket.sendto(raw_data, network.get_next(player))
-                print(data.dest)
-                print(network.get_next_player(player).ip)
-                print(data.dest == network.get_next_player(player).ip)
-                if data.dest == network.get_next_player(player).ip:
-                    player.round_starter = True
                 network.remove_player(int(data.owner))
                 print("next:")
                 print(network.get_next_player(player).id)
