@@ -95,10 +95,15 @@ while True:
                         print("Comecando um novo round")
                         player.get_stick()
                         break
+
                 choice = int(input("Escolha sua carta (escolha 20 para passar): "))
+                
                 if choice != 20:
                     print("quantos %d's voce quer jogar?" % choice)
                     numcards = int(input())
+
+                card_index = player.mycards.index(choice) if choice in player.mycards else -1
+
             else:
                 print(player.last_play["set"])
                 numcards = int(player.last_play["set"])
@@ -112,8 +117,13 @@ while True:
             else:
                 occurences = player.mycards.count(choice)
                 if occurences == 0 or numcards < 1 or numcards > occurences:
+                    print("Jogada inválida.")
                     continue
                 
+                if (choice > player.last_play['card']):
+                    print(f"Você deve jogar uma carta de valor menor ou igual que {player.last_play['card']}")
+                    continue
+
                 valid_play = True
                 i=0
                 while i < numcards:
