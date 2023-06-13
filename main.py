@@ -9,16 +9,6 @@ network = Network()
 address = socket.gethostbyname(socket.gethostname())
 player = network.get_chair(address)
 
-# player = Player(socket.gethostbyname(socket.gethostname()))
-print("num players: " + str(network.num_players))
-print("i am on:")
-print(player.get_local())
-print("next:")
-print("my port is: " + str(player.get_port()))
-print(f"i am a dealer? {player.main}")
-
-print("Aguardando outros jogadores...")
-
 # message = Message(self.id, self.ip, self.ip, "hi", "", "nsei")
 # while True:
 #     socket.sendto(pickle.dumps(message), (self.next.ip, self.next.port))
@@ -69,8 +59,6 @@ else:
         raw_data = network.socket.recv(4096)
         data = pickle.loads(raw_data)
 
-        print(data.type)
-
         if (data): 
             if (data.dest == player.ip and data.type == "shuffle"):
                 player.receive_card(data.play[0])
@@ -91,8 +79,6 @@ print(player.mycards)
 
 # playing
 while True:
-    print("is it my turn: ")
-    print(player.myturn)
     if (player.myturn):
         valid_play = False
         choice = 0
@@ -136,7 +122,7 @@ while True:
 
                 if len(player.mycards) == 0:
                     print(player.mycards)
-                    print("\n\Acabou as cartas! Você ficou em %do lugar\n", player.rank)
+                    print(f"\n\Acabou as cartas! Você ficou em {player.rank}o lugar\n")
                     message = Message(player.id, player.ip, player.ip, "gamewin", "", "")
                     network.socket.sendto(pickle.dumps(message), network.get_next(player))
                 else:
@@ -162,7 +148,6 @@ while True:
         data = pickle.loads(raw_data)
 
         if (data):
-            print(data.type)
             if (data.dest != player.ip and data.type == "play"):
                 if data.play[0] == "pass":
                     player.consecutive_passes = player.consecutive_passes + 1
