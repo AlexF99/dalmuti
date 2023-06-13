@@ -18,7 +18,19 @@ print("my port is: " + str(player.get_port()))
 print(f"i am a dealer? {player.main}")
 
 print("Aguardando outros jogadores...")
-player.say_hi(network.socket)
+
+# message = Message(self.id, self.ip, self.ip, "hi", "", "nsei")
+# while True:
+#     socket.sendto(pickle.dumps(message), (self.next.ip, self.next.port))
+#     raw_data = socket.recv(4096)
+#     data = pickle.loads(raw_data)
+
+#     if ((data.origin == self.ip and data.dest == self.ip) or (data.type == "endhi")):
+#         message = Message(self.id, self.ip, self.next.ip, "endhi", "", "")
+#         socket.sendto(pickle.dumps(message), (self.next.ip, self.next.port))
+#         break
+
+#     socket.sendto(raw_data, (self.next.ip, self.next.port))
 
 # shuffling & dealing
 if (player.main == 1):
