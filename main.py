@@ -201,6 +201,8 @@ while True:
                 print(f"player {data.owner} ganhou o jogo :(")
                 network.socket.sendto(raw_data, network.get_next(player))
                 network.remove_player(int(data.owner))
+                print(data.dest)
+                print(player.ip)
                 if data.dest == player.ip:
                     player.get_stick()
 
