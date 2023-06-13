@@ -200,7 +200,6 @@ while True:
                 network.remove_player(int(data.owner))
                 print("meu proximo")
                 print(network.players)
-                if data.dest == player.ip:
+                if data.dest == network.get_next(player)[0]:
                     player.round_starter = True
-                    player.get_stick()
 
