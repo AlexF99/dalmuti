@@ -6,6 +6,7 @@ import pickle
 import os
 
 clear = lambda: os.system('clear')
+clear()
 
 network = Network()
 
