@@ -3,6 +3,9 @@ from network import Network
 from message import Message
 import random
 import pickle
+import os
+
+clear = lambda: os.system('clear')
 
 network = Network()
 
@@ -31,7 +34,6 @@ if (player.main == 1):
         for j in range(i):
             deck.append(i)
     deck.extend([13, 13])
-    print(deck);
     random.shuffle(deck)
 
     for i, card in enumerate(deck):
@@ -76,9 +78,6 @@ else:
         data = None
     player.mycards.sort()
 
-print("mycards: ")
-print(player.mycards)
-
 # playing
 while True:
     if (player.myturn):
@@ -86,7 +85,8 @@ while True:
         choice = 0
         numcards = 0
         while not valid_play:
-            print(player.mycards)
+            print("\nSua vez de jogar!")
+            print(f"Suas cartas são:\n{player.mycards}\n")
             if player.round_starter:
                 message = Message(player.id, player.ip, player.ip, "roundwin", "", "")
                 network.socket.sendto(pickle.dumps(message), network.get_next(player))
@@ -94,7 +94,7 @@ while True:
                     raw_data = network.socket.recv(4096)
                     data = pickle.loads(raw_data)
                     if (data and data.dest == player.ip and data.type == "roundwin"):
-                        print("Comecando um novo round")
+                        print("Comecando um novo round\n")
                         player.last_play = {"set": 0, "card": 0}
                         player.get_stick()
                         break
@@ -102,7 +102,7 @@ while True:
                 choice = int(input("Escolha sua carta (escolha 20 para passar): "))
 
                 if choice != 20:
-                    numcards = int(input(f"Quantos {choice}'s você quer jogar?"))
+                    numcards = int(input(f"Quantos {choice}'s você quer jogar? "))
 
 
             else:
@@ -119,7 +119,7 @@ while True:
                 play_jester = False
                 
                 if (has_jester > 0 and choice != 13):
-                    answer = input("Deseja acrescentar um coringa à jogada? (y/n)")
+                    answer = input("Deseja acrescentar um coringa à jogada? (y/n) ")
                     if (answer == "y"):
                         play_jester = True
                         occurences = player.mycards.count(choice) + 1
@@ -155,12 +155,11 @@ while True:
                         i = i + 1
 
                 if len(player.mycards) == 0:
-                    print(player.mycards)
+                    print(player.mycards)   
                     print(f"\n\nAcabou as cartas! Você ficou em {player.rank + 1}o lugar\n")
                     message = Message(player.id, player.ip, player.ip, "gamewin", "", "")
                     network.socket.sendto(pickle.dumps(message), network.get_next(player))
                 else:
-                    print(player.mycards)
                     print(f"Você jogou {numcards} da carta {choice}")
                     message = Message(player.id, player.ip, player.ip, "play", f"{numcards}:{choice}", "")
                     network.socket.sendto(pickle.dumps(message), network.get_next(player))
@@ -170,14 +169,14 @@ while True:
             raw_data = network.socket.recv(4096)
             data = pickle.loads(raw_data)
             if (data and data.dest == player.ip and (data.type == "play" or data.type == "gamewin")):
-                print("Deu a volta!")
                 message = Message(player.id, player.ip, network.get_next_player(player).ip, "stick", "", "")
                 network.socket.sendto(pickle.dumps(message), network.get_next(player))
                 player.drop_stick()
                 break
 
     else:
-        print("up and listening...")
+        clear()
+        print("Aguarde sua vez para jogar...")
         raw_data = network.socket.recv(4096)
         data = pickle.loads(raw_data)
 
@@ -199,7 +198,6 @@ while True:
                 network.socket.sendto(raw_data, network.get_next(player))
             
             elif (data.dest == player.ip and data.type == "stick"):
-                print("Bastão passado")
                 player.get_stick()
 
             elif (data.dest != player.ip and data.type == "roundwin"):
