@@ -175,7 +175,6 @@ while True:
                 break
 
     else:
-        clear()
         print("Aguarde sua vez para jogar...")
         raw_data = network.socket.recv(4096)
         data = pickle.loads(raw_data)
