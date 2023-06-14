@@ -130,7 +130,7 @@ while True:
 
 
                 if occurences == 0 or numcards < 1 or numcards > occurences:
-                    print(f"Você não tem a quantidade necessária de cartas {choice} para efetuar a jogada.")
+                    print(f"Você deve jogar {player.last_play['set']} cartas.")
                     continue
                 
                 if (int(player.last_play['card']) > 0 and choice > int(player.last_play['card'])):
@@ -145,8 +145,16 @@ while True:
                     i = i + 1
 
                 if (play_jester):
+                    while i < numcards-1:
+                        player.mycards.remove(choice)
+                        i = i + 1
+
                     player.mycards.remove(13)
                     numcards = numcards + 1
+                else:
+                    while i < numcards:
+                        player.mycards.remove(choice)
+                        i = i + 1
 
                 if len(player.mycards) == 0:
                     print(player.mycards)
