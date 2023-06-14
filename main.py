@@ -146,7 +146,6 @@ while True:
                         i = i + 1
 
                     player.mycards.remove(13)
-                    numcards = numcards + 1
                 else:
                     while i < numcards:
                         player.mycards.remove(choice)
