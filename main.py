@@ -106,7 +106,6 @@ while True:
 
 
             else:
-                print(player.last_play["set"])
                 numcards = int(player.last_play["set"])
                 choice = int(input("Escolha sua carta (escolha 20 para passar): "))
             
@@ -134,7 +133,7 @@ while True:
                     print(f"Você não tem a quantidade necessária de cartas {choice} para efetuar a jogada.")
                     continue
                 
-                if (numcards > 0 and choice > numcards):
+                if (player.last_play['set'] > 0 and choice > player.last_play['set']):
                     print(f"Você deve jogar uma carta de valor menor ou igual que {player.last_play['card']}")
                     continue
 
