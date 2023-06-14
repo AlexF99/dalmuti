@@ -140,10 +140,6 @@ while True:
                 valid_play = True
                 i=0
 
-                while i < numcards:
-                    player.mycards.remove(choice)
-                    i = i + 1
-
                 if (play_jester):
                     while i < numcards-1:
                         player.mycards.remove(choice)
