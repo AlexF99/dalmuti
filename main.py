@@ -93,11 +93,12 @@ while True:
                     data = pickle.loads(raw_data)
                     if (data and data.dest == player.ip and data.type == "roundwin"):
                         print("Comecando um novo round")
+                        player.last_play = {"set": 0, "card": 0}
                         player.get_stick()
                         break
 
                 choice = int(input("Escolha sua carta (escolha 20 para passar): "))
-                
+
                 if choice != 20:
                     print("quantos %d's voce quer jogar?" % choice)
                     numcards = int(input())
@@ -120,7 +121,8 @@ while True:
                     print("Jogada inválida.")
                     continue
                 
-                if (choice > player.last_play['card']):
+                lastCard = int(player.last_play['card'])
+                if (lastCard > 0 and choice > lastCard):
                     print(f"Você deve jogar uma carta de valor menor ou igual que {player.last_play['card']}")
                     continue
 
