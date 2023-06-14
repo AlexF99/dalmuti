@@ -30,6 +30,8 @@ if (player.main == 1):
     for i in range(1, 13):
         for j in range(i):
             deck.append(i)
+    deck.extend([13, 13])
+    print(deck);
     random.shuffle(deck)
 
     for i, card in enumerate(deck):
@@ -100,10 +102,8 @@ while True:
                 choice = int(input("Escolha sua carta (escolha 20 para passar): "))
 
                 if choice != 20:
-                    print("quantos %d's voce quer jogar?" % choice)
-                    numcards = int(input())
+                    numcards = int(input(f"Quantos {choice}'s você quer jogar?"))
 
-                card_index = player.mycards.index(choice) if choice in player.mycards else -1
 
             else:
                 print(player.last_play["set"])
@@ -111,26 +111,43 @@ while True:
                 choice = int(input("Escolha sua carta (escolha 20 para passar): "))
             
             if (choice == 20):
-                print(f"Você passou a vez")
+                print("Você passou a vez")
                 message = Message(player.id, player.ip, player.ip, "play", "pass", "")
                 network.socket.sendto(pickle.dumps(message), network.get_next(player))
                 valid_play = True
             else:
-                occurences = player.mycards.count(choice)
+                has_jester = player.mycards.count(13)
+                play_jester = False
+                
+                if (has_jester > 0 and choice != 13):
+                    answer = input("Deseja acrescentar um coringa à jogada? (y/n)")
+                    if (answer == "y"):
+                        play_jester = True
+                        occurences = player.mycards.count(choice) + 1
+                    else:
+                        occurences = player.mycards.count(choice)
+                else:
+                    occurences = player.mycards.count(choice)
+
+
                 if occurences == 0 or numcards < 1 or numcards > occurences:
-                    print("Jogada inválida.")
+                    print(f"Você não tem a quantidade necessária de cartas {choice} para efetuar a jogada.")
                     continue
                 
-                lastCard = int(player.last_play['card'])
-                if (lastCard > 0 and choice > lastCard):
+                if (numcards > 0 and choice > numcards):
                     print(f"Você deve jogar uma carta de valor menor ou igual que {player.last_play['card']}")
                     continue
 
                 valid_play = True
                 i=0
+
                 while i < numcards:
                     player.mycards.remove(choice)
                     i = i + 1
+
+                if (play_jester):
+                    player.mycards.remove(13)
+                    numcards = numcards + 1
 
                 if len(player.mycards) == 0:
                     print(player.mycards)
