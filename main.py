@@ -106,24 +106,23 @@ while True:
                 else:
                     has_jester = player.mycards.count(13)
                     play_jester = False
+                    last_set = int(player.last_play['set'])
+                    last_card = int(player.last_play['card'])
+
+                    occurences = player.mycards.count(choice)
                     
-                    if (has_jester > 0 and choice != 13):
+                    if (has_jester > 0 and choice != 13 and (last_set - occurences) == 1):
                         answer = input("Deseja acrescentar um coringa à jogada? (y/n) ")
                         if (answer == "y"):
                             play_jester = True
                             occurences = player.mycards.count(choice) + 1
-                        else:
-                            occurences = player.mycards.count(choice)
-                    else:
-                        occurences = player.mycards.count(choice)
-
 
                     if occurences == 0 or numcards < 1 or numcards > occurences:
                         print(f"Você deve jogar {player.last_play['set']} cartas.")
                         continue
                     
-                    if (int(player.last_play['card']) > 0 and choice >= int(player.last_play['card'])):
-                        print(f"Você deve jogar uma carta de valor menor que {player.last_play['card']}")
+                    if (last_card > 0 and choice >= last_card):
+                        print(f"Você deve jogar uma carta de valor menor que {last_card}")
                         continue
 
                     valid_play = True
