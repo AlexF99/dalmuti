@@ -122,8 +122,8 @@ while True:
                         print(f"Você deve jogar {player.last_play['set']} cartas.")
                         continue
                     
-                    if (int(player.last_play['card']) > 0 and choice > int(player.last_play['card'])):
-                        print(f"Você deve jogar uma carta de valor menor ou igual que {player.last_play['card']}")
+                    if (int(player.last_play['card']) > 0 and choice >= int(player.last_play['card'])):
+                        print(f"Você deve jogar uma carta de valor menor que {player.last_play['card']}")
                         continue
 
                     valid_play = True
@@ -144,9 +144,8 @@ while True:
                             i = i + 1
 
                     if len(player.mycards) == 0:
-                        print(player.mycards)   
                         print(f"\n\nAcabou as cartas! Você ficou em {player.rank + 1}o lugar\n")
-                        message = Message(player.id, player.ip, player.ip, "gamewin", "", "")
+                        message = Message(player.id, player.ip, player.ip, "gamewin", f"{numcards}:{choice}", "")
                         network.socket.sendto(pickle.dumps(message), network.get_next(player))
                     else:
                         print(f"Você jogou {numcards} da carta {choice}")
@@ -196,7 +195,9 @@ while True:
 
                 elif (data.type == "gamewin"):
                     player.consecutive_passes = 0
-                    player.round_starter = False
+                    print(f"Jogador {data.owner} enviou carta {data.play[0]}")
+                    play = data.play[0].split(":")
+                    player.last_play = {"set": play[0], "card": play[1]}
                     print(f"player {data.owner} ganhou o jogo :(\n")
                     player.rank = player.rank + 1
                     network.socket.sendto(raw_data, network.get_next(player))
