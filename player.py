@@ -1,5 +1,6 @@
 class Player:
     def __init__(self, player_id, ip, port, dealer):
+        self.end_hand = False
         self.mycards = []
         self.id = player_id
         self.rank = 0

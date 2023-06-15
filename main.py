@@ -69,8 +69,8 @@ while True:
 
     # playing
     while True:
-        if (network.num_players <= 1):
-            print("voce ficou em ultimo")
+        if (network.num_players <= 1 or player.end_hand):
+            print("ACABOU TUDO")
             break
         if (player.myturn):
             valid_play = False
@@ -149,6 +149,7 @@ while True:
                         print(f"\n\nAcabou as cartas! Você ficou em {player.rank + 1}o lugar\n")
                         message = Message(player.id, player.ip, player.ip, "gamewin", f"{numcards}:{choice}", "")
                         network.socket.sendto(pickle.dumps(message), network.get_next(player))
+                        player.end_hand = True
                         break
                     else:
                         print(f"Você jogou {numcards} da carta {choice}")
