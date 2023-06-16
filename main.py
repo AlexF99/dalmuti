@@ -95,6 +95,9 @@ while True:
 
                     if choice != 20:
                         numcards = int(input(f"Quantos {choice}'s você quer jogar? "))
+                    else:
+                        print("Você não pode passar a vez!")
+                        continue
 
 
                 else:
