@@ -120,7 +120,7 @@ while True:
                             play_jester = True
                             occurences = player.mycards.count(choice) + 1
 
-                    if occurences == 0 or numcards < 1 or numcards > occurences:
+                    if player.last_play['set'] > 0 and (occurences == 0 or numcards < 1 or numcards > occurences):
                         print(f"Você deve jogar {player.last_play['set']} cartas.")
                         continue
                     
